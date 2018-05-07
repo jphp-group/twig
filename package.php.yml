@@ -6,12 +6,19 @@ plugins: [Hub, Doc, Gradle]
 
 deps:
   jphp-runtime: '*'
+
+sources:
+- src
   
 hub:
   login: d.zayceff@gmail.com
   
 config:
   ignore: ['/sandbox/**', '/.idea/**', '/*.iml', '/.git/**', '/examples/**']
+
+gradle:
+  deps:
+    - io.pebbletemplates:pebble:3.0.0-SNAPSHOT
 
 doc:
   url-prefix: 'https://github.com/jphp-group/twig/blob/master/api-docs/'

@@ -1,0 +1,20 @@
+name: simple
+version: 1.0.0
+
+deps:
+  jphp-core: '*'
+  jphp-httpserver-ext: '*'
+  twig: '*'
+
+plugins:
+- App
+
+sources:
+- src
+- view
+
+includes:
+- index.php
+
+app:
+  jvm-args: ['-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005']
