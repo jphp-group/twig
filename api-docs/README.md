@@ -19,3 +19,7 @@ jppm add twig@1.0.0+dev
 
 - [`TwigLoader`](https://github.com/jphp-group/twig/blob/master/api-docs/classes/twig/TwigLoader.md)
 - [`TwigStreamLoader`](https://github.com/jphp-group/twig/blob/master/api-docs/classes/twig/TwigStreamLoader.md)
+- [`TwigEngine`](https://github.com/jphp-group/twig/blob/master/api-docs/classes/twig/TwigEngine.md)- _Class TwigEngine_
+- [`TwigException`](https://github.com/jphp-group/twig/blob/master/api-docs/classes/twig/TwigException.md)- _Class TwigException_
+- [`TwigExtension`](https://github.com/jphp-group/twig/blob/master/api-docs/classes/twig/TwigExtension.md)- _Class TwigExtension_
+- [`TwigTemplate`](https://github.com/jphp-group/twig/blob/master/api-docs/classes/twig/TwigTemplate.md)

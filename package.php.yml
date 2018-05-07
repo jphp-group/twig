@@ -22,4 +22,4 @@ gradle:
 
 doc:
   url-prefix: 'https://github.com/jphp-group/twig/blob/master/api-docs/'
-  langs: {en: 'English', ru: 'Русский'}  
+  langs: {en: 'English', ru: 'Русский'}
