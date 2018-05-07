@@ -9,7 +9,7 @@ jppm add twig@1.0.0+dev
 
 ## How to use?
 
-Go to the `examples/` directory and see the `simple` project sources.
+Go to the `examples/` directory and see the [`simple`](examples/simple) project sources.
 
 ## API Documentation
 
