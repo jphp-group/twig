@@ -7,4 +7,6 @@ jdk:
 before_install:
   - wget -O - https://github.com/jphp-compiler/jphp/releases/download/jppm-0.2.7/jppm-setup-0.2.7.sh | bash
 
-script: jppm build+test
+script:
+- jppm install
+- jppm build+test
