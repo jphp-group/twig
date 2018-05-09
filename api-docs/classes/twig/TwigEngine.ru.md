@@ -15,6 +15,7 @@ Class TwigEngine
 - `->`[`addExtension()`](#method-addextension)
 - `->`[`load()`](#method-load)
 - `->`[`render()`](#method-render)
+- `->`[`renderString()`](#method-renderstring) - _Render template from text._
 
 ---
 # Методы
@@ -53,3 +54,13 @@ load(string $name): twig\TwigTemplate
 ```php
 render(string $name, array $args): string
 ```
+
+---
+
+<a name="method-renderstring"></a>
+
+### renderString()
+```php
+renderString(string $string, array $args): string
+```
+Render template from text.
