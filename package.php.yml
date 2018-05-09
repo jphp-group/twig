@@ -2,24 +2,43 @@ name: twig
 version: 1.0.0+dev
 description: Twig template engine for JPHP
 
-plugins: [Hub, Doc, Gradle]
+plugins:
+- Hub
+- Doc
+- Gradle
 
 deps:
   jphp-runtime: '*'
 
+devDeps:
+  jphp-core: '*'
+  tester: '*'
+
+tasks:
+  build+test:
+    description: Build and run tests.
+    depends-on: ['build', 'test']
+
 sources:
 - src
-  
+
 hub:
   login: d.zayceff@gmail.com
-  
+
 config:
-  ignore: ['/sandbox/**', '/.idea/**', '/*.iml', '/.git/**', '/examples/**']
+  ignore:
+  - /sandbox/**
+  - /.idea/**
+  - /*.iml
+  - /.git/**
+  - /examples/**
 
 gradle:
   deps:
-    - io.pebbletemplates:pebble:3.0.0-SNAPSHOT
+  - io.pebbletemplates:pebble:3.0.0-SNAPSHOT
 
 doc:
-  url-prefix: 'https://github.com/jphp-group/twig/blob/master/api-docs/'
-  langs: {en: 'English', ru: 'Русский'}
+  url-prefix: https://github.com/jphp-group/twig/blob/master/api-docs/
+  langs:
+    en: English
+    ru: Русский
