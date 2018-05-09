@@ -39,4 +39,15 @@ class TwigEngine
     public function render(string $name, array $args = []): string
     {
     }
+
+    /**
+     * Render template from text.
+     *
+     * @param string $string
+     * @param array $args
+     * @return string
+     */
+    public function renderString(string $string, array $args = []): string
+    {
+    }
 }

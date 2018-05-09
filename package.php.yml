@@ -1,5 +1,5 @@
 name: twig
-version: 1.0.0+dev
+version: 1.0.0
 description: Twig template engine for JPHP
 
 plugins:
@@ -42,3 +42,6 @@ doc:
   langs:
     en: English
     ru: Русский
+
+tester:
+  #jvm-args: ['-agentlib:jdwp=transport=dt_socket,server=n,address=localhost:5005,suspend=y,onuncaught=n']

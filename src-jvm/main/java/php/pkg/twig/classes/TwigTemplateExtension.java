@@ -24,6 +24,7 @@ import php.runtime.env.Environment;
 import php.runtime.invoke.Invoker;
 import php.runtime.lang.BaseObject;
 import php.runtime.memory.ArrayMemory;
+import php.runtime.memory.support.operation.map.HashMapMemoryOperation;
 import php.runtime.reflection.ClassEntity;
 
 @Name("TwigExtension")
@@ -33,6 +34,8 @@ public class TwigTemplateExtension extends BaseObject {
     private Map<String, Function> functionMap = new LinkedHashMap<>();
     private Map<String, Test> testMap = new LinkedHashMap<>();
     private Map<String, Object> globalVarMap = new LinkedHashMap<>();
+
+    private final HashMapMemoryOperation mapOperation = new HashMapMemoryOperation(String.class, Object.class);
 
     public TwigTemplateExtension(Environment env, ClassEntity clazz) {
         super(env, clazz);
@@ -62,6 +65,15 @@ public class TwigTemplateExtension extends BaseObject {
         };
     }
 
+    private Memory convertArgs(Environment env, Map<String, Object> map) {
+        try {
+            return mapOperation.unconvert(env, env.trace(), map);
+        } catch (Throwable throwable) {
+            env.forwardThrow(throwable);
+            return Memory.NULL;
+        }
+    }
+
     @Signature
     public void addFilter(Environment env, String name, Invoker filter) {
         addFilter(env, name, filter, new ArrayMemory());
@@ -69,16 +81,18 @@ public class TwigTemplateExtension extends BaseObject {
 
     @Signature
     public void addFilter(Environment env, String name, Invoker filter, @Arg(type = HintType.ARRAY) Memory argNames) {
+        List<String> _argNames = Arrays.asList(argNames.toValue(ArrayMemory.class).toStringArray());
+
         filterMap.put(name, new Filter() {
             @Override
             public Object apply(Object o, Map<String, Object> map,
                                 PebbleTemplate pebbleTemplate, EvaluationContext evaluationContext, int i) throws PebbleException {
-                return filter.callAny(o, map, new TwigTemplate(env, pebbleTemplate), i);
+                return filter.callAny(o, convertArgs(env, map), new TwigTemplate(env, pebbleTemplate), i);
             }
 
             @Override
             public List<String> getArgumentNames() {
-                return Arrays.asList(argNames.toValue(ArrayMemory.class).toStringArray());
+                return _argNames;
             }
         });
     }
@@ -90,35 +104,39 @@ public class TwigTemplateExtension extends BaseObject {
 
     @Signature
     public void addFunction(Environment env, String name, Invoker function, @Arg(type = HintType.ARRAY) Memory argNames) {
+        List<String> _argNames = Arrays.asList(argNames.toValue(ArrayMemory.class).toStringArray());
+
         functionMap.put(name, new Function() {
             @Override
             public Object execute(Map<String, Object> map, PebbleTemplate pebbleTemplate, EvaluationContext evaluationContext, int i) {
-                return function.callAny(map, new TwigTemplate(env, pebbleTemplate), i);
+                return function.callAny(convertArgs(env, map), new TwigTemplate(env, pebbleTemplate), i);
             }
 
             @Override
             public List<String> getArgumentNames() {
-                return Arrays.asList(argNames.toValue(ArrayMemory.class).toStringArray());
+                return _argNames;
             }
         });
     }
 
     @Signature
     public void addTest(Environment env, String name, Invoker test) {
-        addFunction(env, name, test, new ArrayMemory());
+        addTest(env, name, test, new ArrayMemory());
     }
 
     @Signature
     public void addTest(Environment env, String name, Invoker test, @Arg(type = HintType.ARRAY) Memory argNames) {
+        List<String> _argNames = Arrays.asList(argNames.toValue(ArrayMemory.class).toStringArray());
+
         testMap.put(name, new Test() {
             @Override
             public boolean apply(Object o, Map<String, Object> map, PebbleTemplate pebbleTemplate, EvaluationContext evaluationContext, int i) throws PebbleException {
-                return test.callAny(o, map, new TwigTemplate(env, pebbleTemplate), i).toBoolean();
+                return test.callAny(o, convertArgs(env, map), new TwigTemplate(env, pebbleTemplate), i).toBoolean();
             }
 
             @Override
             public List<String> getArgumentNames() {
-                return Arrays.asList(argNames.toValue(ArrayMemory.class).toStringArray());
+                return _argNames;
             }
         });
     }

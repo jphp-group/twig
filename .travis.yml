@@ -9,4 +9,4 @@ before_install:
 
 script:
 - jppm install
-- jppm build+test
+- jppm test

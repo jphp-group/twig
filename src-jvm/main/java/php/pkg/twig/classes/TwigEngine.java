@@ -6,15 +6,14 @@ import com.mitchellbosecke.pebble.attributes.AttributeResolver;
 import com.mitchellbosecke.pebble.extension.AbstractExtension;
 import com.mitchellbosecke.pebble.lexer.Syntax;
 import com.mitchellbosecke.pebble.loader.Loader;
+import com.mitchellbosecke.pebble.loader.StringLoader;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import com.mitchellbosecke.pebble.tokenParser.TokenParser;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import php.pkg.twig.TwigExtension;
 import php.pkg.twig.support.JPHPExtension;
 import php.runtime.Memory;
@@ -33,7 +32,7 @@ import php.runtime.reflection.ClassEntity;
 public class TwigEngine extends BaseObject {
     private PebbleEngine engine;
     private Builder builder;
-    private List<TwigTemplateExtension> extensions = new ArrayList<>();
+    private Loader<String> fetchLoader;
 
     public TwigEngine(Environment env, ClassEntity clazz) {
         super(env, clazz);
@@ -46,9 +45,10 @@ public class TwigEngine extends BaseObject {
         Builder builder = new Builder();
         Syntax.Builder syntaxBuilder = new Syntax.Builder();
 
+        fetchLoader = fetchLoader(env, loader);
         this.builder = builder.syntax(syntaxBuilder.build())
                 .extension(new JPHPExtension(env))
-                .loader(fetchLoader(env, loader))
+                .loader(fetchLoader)
                 .cacheActive(options.valueOfIndex("cache").toBoolean())
                 .strictVariables(options.valueOfIndex("strict").toBoolean());
 
@@ -74,6 +74,19 @@ public class TwigEngine extends BaseObject {
     @Signature
     public String render(Environment env, String name, Map<String, Object> context) throws IOException {
         return load(env, name).render(env, context);
+    }
+
+    @Signature
+    public String renderString(Environment env, String text) throws IOException {
+        return renderString(env, text, new LinkedHashMap<>());
+    }
+
+    @Signature
+    public String renderString(Environment env, String text, Map<String, Object> context) throws IOException {
+        PebbleTemplate template = builder.loader(new StringLoader()).build().getTemplate(text);
+        builder.loader(fetchLoader);
+
+        return new TwigTemplate(env, template).render(env, context);
     }
 
     public Reader getReader(String cacheKey, IObject loader) {
