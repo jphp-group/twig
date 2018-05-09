@@ -7,7 +7,7 @@ Twig template engine for JPHP.
 ## Install
 
 ```bash
-jppm add twig@1.0.0+dev
+jppm add twig
 ```
 
 ## How to use?
