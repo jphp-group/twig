@@ -47,9 +47,9 @@ public class JPHPExtension extends AbstractExtension implements AttributeResolve
                             }
                         }
 
-                        return memory;
+                        return Memory.unwrap(env, memory);
                     } else {
-                        return instance.callMethodAny(env, attributeName, argumentValues);
+                        return Memory.unwrap(env, instance.callMethodAny(env, attributeName, argumentValues));
                     }
                 } catch (Throwable e) {
                     if (e instanceof BaseError) {
@@ -81,7 +81,7 @@ public class JPHPExtension extends AbstractExtension implements AttributeResolve
             return new ResolvedAttribute() {
                 @Override
                 public Object evaluate() {
-                    return instance.valueOfIndex(attributeName);
+                    return Memory.unwrap(env, instance.valueOfIndex(attributeName));
                 }
             };
         }

@@ -94,7 +94,7 @@ public class TwigEngine extends BaseObject {
         try {
             return new InputStreamReader(Stream.getInputStream(
                     env, env.invokeMethod(loader, "read", StringMemory.valueOf(cacheKey))
-            ));
+            ), env.getDefaultCharset());
         } catch (Throwable throwable) {
             env.forwardThrow(throwable);
             return null;
