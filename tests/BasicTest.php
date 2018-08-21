@@ -110,4 +110,34 @@ class BasicTest extends TestCase
 
         Assert::isEqual('<html>', $this->twig->renderString('{{ "<html>" | safeString }}'));
     }
+
+    public function testEquals()
+    {
+        Assert::isEqual('success',
+            $this->twig->renderString(
+                '{{ x == "1.2.3" ? "success" : "fail" }}',
+                ['x' => '1.2.3']
+            )
+        );
+    }
+
+    public function testArrayGetEquals()
+    {
+        Assert::isEqual('success',
+            $this->twig->renderString(
+                '{{ x[0] == y[0] ? "success" : "fail" }}',
+                ['x' => ['1.2.3'], 'y' => ['1.2.3']]
+            )
+        );
+    }
+
+    public function testForInEquals()
+    {
+        Assert::isEqual('success',
+            $this->twig->renderString(
+                '{% for el in arr %}{{ el == "1.2.3" ? "success" : "fail" }}{% endfor %}',
+                ['arr' => ['1.2.3']]
+            )
+        );
+    }
 }

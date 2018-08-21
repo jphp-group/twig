@@ -1,5 +1,5 @@
 name: twig
-version: 1.0.2
+version: 1.0.3
 description: Twig template engine for JPHP
 
 plugins:
@@ -44,6 +44,8 @@ doc:
     ru: Русский
 
 history:
+  1.0.3:
+  - Fix bug of getting value in forin loop.
   1.0.2:
   - Add able to return raw text from filters and functions.
   - Upgrade pebble lib version.

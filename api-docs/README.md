@@ -3,13 +3,13 @@
 ---
 
 ## twig
-> version 1.0.2, created by JPPM.
+> version 1.0.3, created by JPPM.
 
 Twig template engine for JPHP
 
 ### Install
 ```
-jppm add twig@1.0.2
+jppm add twig@1.0.3
 ```
 
 ### API

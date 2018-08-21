@@ -8,7 +8,9 @@ import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import php.pkg.twig.TwigExtension;
+import php.runtime.Memory;
 import php.runtime.annotation.Reflection.Getter;
 import php.runtime.annotation.Reflection.Namespace;
 import php.runtime.annotation.Reflection.Signature;
@@ -44,9 +46,18 @@ public class TwigTemplate extends BaseWrapper<PebbleTemplate> {
         return render(env, new HashMap<>());
     }
 
+    protected void prepareContext(Environment env, Map<String, Object> contexts) {
+        for (Entry<String, Object> entry : contexts.entrySet()) {
+            if (entry.getValue() instanceof Memory) {
+                contexts.put(entry.getKey(), Memory.unwrap(env, (Memory) entry.getValue(), true));
+            }
+        }
+    }
+
     @Signature
     public String render(Environment env, Map<String, Object> contexts) throws IOException {
         StringWriter writer = new StringWriter();
+        prepareContext(env, contexts);
         getWrappedObject().evaluate(writer, contexts, WrapLocale.getDefault(env));
         return writer.toString();
     }
@@ -59,6 +70,8 @@ public class TwigTemplate extends BaseWrapper<PebbleTemplate> {
     @Signature
     public String renderBlock(Environment env, String block, Map<String, Object> contexts) throws IOException {
         StringWriter writer = new StringWriter();
+        prepareContext(env, contexts);
+
         getWrappedObject().evaluateBlock(block, writer, contexts, WrapLocale.getDefault(env));
         return writer.toString();
     }

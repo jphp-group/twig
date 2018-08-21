@@ -44,9 +44,9 @@ public class JPHPExtension extends AbstractExtension implements AttributeResolve
                     }
                 }
 
-                return new ResolvedAttribute(Memory.unwrap(env, memory));
+                return new ResolvedAttribute(Memory.unwrap(env, memory.toImmutable(), true));
             } else {
-                return new ResolvedAttribute(Memory.unwrap(env, instance.callMethodAny(env, attributeName, argumentValues)));
+                return new ResolvedAttribute(Memory.unwrap(env, instance.callMethodAny(env, attributeName, argumentValues).toImmutable(), true));
             }
         } catch (Throwable e) {
             if (e instanceof BaseError) {
@@ -73,7 +73,7 @@ public class JPHPExtension extends AbstractExtension implements AttributeResolve
                 return null;
             }
 
-            return new ResolvedAttribute(Memory.unwrap(env, instance.valueOfIndex(attributeName)));
+            return new ResolvedAttribute(Memory.unwrap(env, instance.valueOfIndex(attributeName).toImmutable(), true));
         }
     }
 
