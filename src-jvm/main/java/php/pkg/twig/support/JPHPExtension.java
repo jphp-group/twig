@@ -30,44 +30,39 @@ public class JPHPExtension extends AbstractExtension implements AttributeResolve
     }
 
     private ResolvedAttribute resolve(IObject instance, String attributeName, Object[] argumentValues, String filename, int lineNumber) {
-        return new ResolvedAttribute() {
-            @Override
-            public Object evaluate() {
-                try {
-                    if (argumentValues == null) {
-                        Memory memory = env.getObjectProperty(instance, attributeName.toString());
+        try {
+            if (argumentValues == null) {
+                Memory memory = env.getObjectProperty(instance, attributeName.toString());
 
-                        if (memory.isNull() && !attributeName.startsWith("get")) {
-                            String methodName = "get" + attributeName.toLowerCase();
+                if (memory.isNull() && !attributeName.startsWith("get")) {
+                    String methodName = "get" + attributeName.toLowerCase();
 
-                            MethodEntity method = instance.getReflection().findMethod(methodName);
+                    MethodEntity method = instance.getReflection().findMethod(methodName);
 
-                            if (method != null && !method.isAbstractable() && !method.isStatic()) {
-                                return method.invokeDynamic(instance, env, env.trace());
-                            }
-                        }
-
-                        return Memory.unwrap(env, memory);
-                    } else {
-                        return Memory.unwrap(env, instance.callMethodAny(env, attributeName, argumentValues));
+                    if (method != null && !method.isAbstractable() && !method.isStatic()) {
+                        return new ResolvedAttribute(method.invokeDynamic(instance, env, env.trace()));
                     }
-                } catch (Throwable e) {
-                    if (e instanceof BaseError) {
-                        PebbleException exception = new PebbleException(
-                                e,
-                                ((BaseError)e).getMessage(env).toString(),
-                                lineNumber,
-                                filename
-                        );
-
-                        throw exception;
-                    }
-
-                    env.forwardThrow(e);
-                    return null;
                 }
+
+                return new ResolvedAttribute(Memory.unwrap(env, memory));
+            } else {
+                return new ResolvedAttribute(Memory.unwrap(env, instance.callMethodAny(env, attributeName, argumentValues)));
             }
-        };
+        } catch (Throwable e) {
+            if (e instanceof BaseError) {
+                PebbleException exception = new PebbleException(
+                        e,
+                        ((BaseError)e).getMessage(env).toString(),
+                        lineNumber,
+                        filename
+                );
+
+                throw exception;
+            }
+
+            env.forwardThrow(e);
+            return null;
+        }
     }
 
     private ResolvedAttribute resolve(Memory instance, String attributeName, Object[] argumentValues, String filename, int lineNumber) {
@@ -78,12 +73,7 @@ public class JPHPExtension extends AbstractExtension implements AttributeResolve
                 return null;
             }
 
-            return new ResolvedAttribute() {
-                @Override
-                public Object evaluate() {
-                    return Memory.unwrap(env, instance.valueOfIndex(attributeName));
-                }
-            };
+            return new ResolvedAttribute(Memory.unwrap(env, instance.valueOfIndex(attributeName)));
         }
     }
 

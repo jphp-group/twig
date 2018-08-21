@@ -1,5 +1,5 @@
 name: twig
-version: 1.0.1
+version: 1.0.2
 description: Twig template engine for JPHP
 
 plugins:
@@ -35,13 +35,18 @@ config:
 
 gradle:
   deps:
-  - io.pebbletemplates:pebble:3.0.0-SNAPSHOT
+  - io.pebbletemplates:pebble:3.0.2
 
 doc:
   url-prefix: https://github.com/jphp-group/twig/blob/master/api-docs/
   langs:
     en: English
     ru: Русский
+
+history:
+  1.0.2:
+  - Add able to return raw text from filters and functions.
+  - Upgrade pebble lib version.
 
 tester:
   #jvm-args: ['-agentlib:jdwp=transport=dt_socket,server=n,address=localhost:5005,suspend=y,onuncaught=n']

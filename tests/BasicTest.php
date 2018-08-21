@@ -6,7 +6,7 @@ use tester\{
 };
 
 use twig\{
-    TwigEngine, TwigExtension, TwigStreamLoader
+    TwigEngine, TwigExtension, TwigSafeString, TwigStreamLoader
 };
 
 class BasicTest extends TestCase
@@ -98,5 +98,16 @@ class BasicTest extends TestCase
         $this->twig->addExtension($extension);
 
         Assert::isEqual('foobar', $this->twig->renderString('{{glVar}}'));
+    }
+
+    public function testSafeString()
+    {
+        $extension = new TwigExtension();
+        $extension->addFilter('safeString', function ($value) {
+            return new TwigSafeString($value);
+        }, ['value']);
+        $this->twig->addExtension($extension);
+
+        Assert::isEqual('<html>', $this->twig->renderString('{{ "<html>" | safeString }}'));
     }
 }

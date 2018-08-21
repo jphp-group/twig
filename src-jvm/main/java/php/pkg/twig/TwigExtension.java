@@ -5,9 +5,11 @@ import com.mitchellbosecke.pebble.error.LoaderException;
 import com.mitchellbosecke.pebble.error.ParserException;
 import com.mitchellbosecke.pebble.error.PebbleException;
 import com.mitchellbosecke.pebble.error.RootAttributeNotFoundException;
+import com.mitchellbosecke.pebble.extension.escaper.SafeString;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import php.pkg.twig.classes.TwigEngine;
 import php.pkg.twig.classes.TwigException;
+import php.pkg.twig.classes.TwigSafeString;
 import php.pkg.twig.classes.TwigTemplate;
 import php.pkg.twig.classes.TwigTemplateExtension;
 import php.runtime.env.CompileScope;
@@ -31,5 +33,6 @@ public class TwigExtension extends Extension {
         registerWrapperClass(scope, PebbleTemplate.class, TwigTemplate.class);
         registerClass(scope, TwigEngine.class);
         registerClass(scope, TwigTemplateExtension.class);
+        registerWrapperClass(scope, SafeString.class, TwigSafeString.class);
     }
 }

@@ -2,10 +2,11 @@ language: java
 sudo: required
 
 jdk:
+  - oraclejdk10
   - oraclejdk8
 
 before_install:
-  - wget -O - https://github.com/jphp-compiler/jphp/releases/download/jppm-0.2.7/jppm-setup-0.2.7.sh | bash
+  - wget -O - https://github.com/jphp-compiler/jphp/releases/download/jppm-0.3.8/jppm-setup-0.3.8.sh | bash
 
 script:
 - jppm install

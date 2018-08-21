@@ -5,6 +5,7 @@ import com.mitchellbosecke.pebble.extension.AbstractExtension;
 import com.mitchellbosecke.pebble.extension.Filter;
 import com.mitchellbosecke.pebble.extension.Function;
 import com.mitchellbosecke.pebble.extension.Test;
+import com.mitchellbosecke.pebble.extension.escaper.SafeString;
 import com.mitchellbosecke.pebble.template.EvaluationContext;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 
@@ -87,7 +88,13 @@ public class TwigTemplateExtension extends BaseObject {
             @Override
             public Object apply(Object o, Map<String, Object> map,
                                 PebbleTemplate pebbleTemplate, EvaluationContext evaluationContext, int i) throws PebbleException {
-                return filter.callAny(o, convertArgs(env, map), new TwigTemplate(env, pebbleTemplate), i);
+                Memory memory = filter.callAny(o, convertArgs(env, map), new TwigTemplate(env, pebbleTemplate), i);
+
+                if (memory.instanceOf(TwigSafeString.class)) {
+                    return memory.toObject(TwigSafeString.class).getWrappedObject();
+                }
+
+                return memory;
             }
 
             @Override
@@ -109,7 +116,13 @@ public class TwigTemplateExtension extends BaseObject {
         functionMap.put(name, new Function() {
             @Override
             public Object execute(Map<String, Object> map, PebbleTemplate pebbleTemplate, EvaluationContext evaluationContext, int i) {
-                return function.callAny(convertArgs(env, map), new TwigTemplate(env, pebbleTemplate), i);
+                Memory memory = function.callAny(convertArgs(env, map), new TwigTemplate(env, pebbleTemplate), i);
+
+                if (memory.instanceOf(TwigSafeString.class)) {
+                    return memory.toObject(TwigSafeString.class).getWrappedObject();
+                }
+
+                return memory;
             }
 
             @Override
@@ -143,6 +156,11 @@ public class TwigTemplateExtension extends BaseObject {
 
     @Signature
     public void addGlobalVar(String name, Memory value) {
+        if (value.instanceOf(TwigSafeString.class)) {
+            globalVarMap.put(name, value.toObject(TwigSafeString.class).getWrappedObject());
+            return;
+        }
+
         globalVarMap.put(name, value);
     }
 }
